@@ -1,0 +1,4 @@
+package solve
+
+class Resolve {
+}
