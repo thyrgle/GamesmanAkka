@@ -23,6 +23,12 @@ class Solver<Pos, Move> : UntypedActor() {
      }
 
     override fun onReceive(msg: Any?) {
+        when (msg) {
+            is Lookup     -> println("lookup")
+            is Resolve    -> println("resolve")
+            is SendBack   -> println("send back")
+            is Distribute -> println("distribute")
+        }
     }
 
  }
