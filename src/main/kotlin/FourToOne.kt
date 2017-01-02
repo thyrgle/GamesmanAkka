@@ -22,6 +22,11 @@ class FourToOne : Game<Int, Int> {
             return Primitive.UNDECIDED
         }
     }
+    
+    override fun hashPosition(p: Int): Int {
+        // Pretty stupid hash, but it works for this small example.
+        return p
+    }
 }
 
 object Main {

@@ -9,4 +9,6 @@ interface Game<Pos, Move> {
     fun genMoves(p: Pos): Array<Move>
 
     fun primitive(p: Pos): Primitive
+
+    fun hashPosition(p: Pos): Int
 }
