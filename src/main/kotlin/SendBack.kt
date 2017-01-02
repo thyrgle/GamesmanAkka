@@ -1,4 +1,4 @@
 package solve
 
-class SendBack {
+class SendBack<Pos> {
 }

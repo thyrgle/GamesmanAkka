@@ -2,7 +2,7 @@ package solve
 
 interface Game<Pos, Move> {
 
-    val initialPos: Pos?
+    val initialPos: Pos
 
     fun doMove(p: Pos, m: Move): Move
 

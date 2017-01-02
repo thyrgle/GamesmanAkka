@@ -20,14 +20,15 @@ class Solver<Pos, Move> : UntypedActor() {
                 system.actorOf(Props.create(Solver::class.java), "Solver" + i.toString())
             )
         }
+        val master = actorForHash(game.hashPosition(game.initialPos))
      }
 
     override fun onReceive(msg: Any?) {
         when (msg) {
-            is Lookup     -> println("lookup")
-            is Resolve    -> println("resolve")
-            is SendBack   -> println("send back")
-            is Distribute -> println("distribute")
+            is Lookup<*>     -> println("lookup")
+            is Resolve<*>    -> println("resolve")
+            is SendBack<*>   -> println("send back")
+            is Distribute<*> -> println("distribute")
         }
     }
 

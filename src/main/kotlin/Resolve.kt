@@ -1,4 +1,4 @@
 package solve
 
-class Resolve {
+class Resolve<Pos> {
 }

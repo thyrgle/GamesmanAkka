@@ -1,4 +1,5 @@
 package solve
 
-class Distribute {
+class Distribute<Pos>(positions: Array<Pos>) {
+    val positions = positions
 }
