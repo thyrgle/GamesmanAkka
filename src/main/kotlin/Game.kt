@@ -1,12 +1,12 @@
 package solve
 
-interface Game<Move> {
+interface Game<Pos, Move> {
 
-    val initialPos: Move?
+    val initialPos: Pos?
 
-    fun doMove(m: Move): Move
+    fun doMove(p: Pos, m: Move): Move
 
-    fun genMoves(m: Move): MutableList<Move>
+    fun genMoves(p: Pos): Array<Move>
 
-    fun primitive(m: Move): Primitive
+    fun primitive(p: Pos): Primitive
 }

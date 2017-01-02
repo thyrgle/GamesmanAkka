@@ -5,7 +5,7 @@ import akka.actor.ActorRef
 import akka.actor.Props
 import akka.actor.UntypedActor
 
-class Solver<Move> : UntypedActor() {
+class Solver<Pos, Move> : UntypedActor() {
 
     var actors: MutableList<ActorRef> = arrayListOf()
 
@@ -13,7 +13,7 @@ class Solver<Move> : UntypedActor() {
         return actors.get(hash % Config.ACTOR_COUNT)
     }
 
-    fun run(game: Game<Move>) {
+    fun run(game: Game<Pos, Move>) {
         val system = ActorSystem.create("SolverSystem")
         for (i in 1..Config.ACTOR_COUNT) {
             actors.add(
