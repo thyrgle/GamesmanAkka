@@ -14,3 +14,6 @@ hs_err_pid*
 # Hide gradle
 .gradle
 build/
+
+# Mac .DS_Store.
+.DS_Store
