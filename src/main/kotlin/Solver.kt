@@ -27,6 +27,9 @@ class Solver<Pos, Move> : UntypedActor() {
 
      /**
       * Determine if a particular position has been solved. If not, return null.
+      *
+      * @param position the position to be looked up.
+      * @return the primitive of the value of the position if it exists.
       */
      fun lookup(position: Pos): Primitive? {
         if (solvedPositions.containsKey(position)) {
@@ -40,6 +43,9 @@ class Solver<Pos, Move> : UntypedActor() {
       * Given a particular position, resolve the position if it can be resolved.
       * If it can't update the counter to indicate that it only needs so many more
       * iterations until it can be.
+      *
+      * @param position to be resolved.
+      * @return success (or failure) of resolving the position.
       */
      fun resolve(position: Pos): Boolean {
          // TODO.
@@ -48,6 +54,8 @@ class Solver<Pos, Move> : UntypedActor() {
     
      /**
       * Generate a positions children and distribute them to everyone.
+      *
+      * @param Pos he position to be distributed.
       */
      fun distribute(position: Pos) {
      }
