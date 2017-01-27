@@ -27,7 +27,6 @@ class Solver<Pos, Move> : UntypedActor() {
 
      /**
       * Determine if a particular position has been solved. If not, return null.
-      * TODO Fix signature.
       */
      fun lookup(position: Pos): Primitive? {
         if (solvedPositions.containsKey(position)) {
