@@ -43,11 +43,24 @@ class Solver<Pos, Move> : UntypedActor() {
       */
      fun resolve(position: Pos) {
      }
+    
+     /**
+      * Generate a positions children and distribute them to everyone.
+      */
+     fun distribute(position: Pos) {
+     }
 
     override fun onReceive(msg: Any?) {
         when (msg) {
-            is Lookup<*>     -> lookup(msg.position as Pos)
-            is Resolve<*>    -> resolve(msg.position as Pos)
+            is Lookup<*> -> {
+                val result = lookup(msg.position as Pos)
+                if (result != null) {
+                    // TODO: Send back to appropriate actor.
+                } else {
+                    distribute(msg.position as Pos)
+                }
+            }
+            is Resolve<*> -> resolve(msg.position as Pos)
         }
     }
 
