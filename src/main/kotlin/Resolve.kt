@@ -1,4 +1,5 @@
 package solve
 
-class Resolve<Pos> {
+class Resolve<Pos>(position: Pos) {
+    val position = position
 }

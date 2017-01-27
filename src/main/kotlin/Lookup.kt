@@ -1,5 +1,5 @@
 package solve
 
-class Lookup<Pos>(p: Pos) {
-    val p = p
+class Lookup<Pos>(position: Pos) {
+    val position = position
 }
