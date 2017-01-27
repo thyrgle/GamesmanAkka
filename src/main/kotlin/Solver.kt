@@ -41,7 +41,9 @@ class Solver<Pos, Move> : UntypedActor() {
       * If it can't update the counter to indicate that it only needs so many more
       * iterations until it can be.
       */
-     fun resolve(position: Pos) {
+     fun resolve(position: Pos): Boolean {
+         // TODO.
+         return false
      }
     
      /**
@@ -60,7 +62,15 @@ class Solver<Pos, Move> : UntypedActor() {
                     distribute(msg.position as Pos)
                 }
             }
-            is Resolve<*> -> resolve(msg.position as Pos)
+            is Resolve<*> ->  {
+                if (resolve(msg.position as Pos)) {
+                    // The position was successfully resolved.
+                    // TODO: Send back to appropriate actor.
+                } else {
+                    // Still needs to wait for stuff to finish.
+                    // TODO?
+                }
+            }
         }
     }
 
