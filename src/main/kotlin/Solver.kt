@@ -42,6 +42,9 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
         val master = actorForHash(game.hashPosition(game.initialPos))
     }
 
+    /**
+     * An actor responsible for maintaining and "solving" a subset of game states.
+     */
     inner class SolverActor: UntypedActor() {
 
         val solvedPositions: MutableMap<Pos, Primitive> =  mutableMapOf()
