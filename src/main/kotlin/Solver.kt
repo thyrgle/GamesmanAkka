@@ -43,11 +43,22 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
     }
 
     /**
+     * A class that contains information about an unresolved position.
+     */
+    inner class Unresolved<Pos> (pos: Pos) {
+        // TODO: Does it need to be mutable?
+        val childrenRemaining: MutableMap<Pos, Int> = mutableMapOf()
+        val status: Pair<Primitive, Int> = Pair(Primitive.LOSS, -1)
+        val parents: MutableList<Pos> = mutableListOf();
+    }
+
+    /**
      * An actor responsible for maintaining and "solving" a subset of game states.
      */
     inner class SolverActor: UntypedActor() {
 
         val solvedPositions: MutableMap<Pos, Primitive> =  mutableMapOf()
+        val unresolved: MutableSet<Unresolved<Pos>> = mutableSetOf()
 
         /**
          * Determine if a particular position has been solved. If not, return null.
