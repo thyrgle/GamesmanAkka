@@ -32,6 +32,6 @@ class FourToOne : Game<Int, Int> {
 object Main {
     
     fun main() {
-        Solver<Int, Int>().run(FourToOne())
+        Solver<Int, Int>(FourToOne()).run()
     }
 }
