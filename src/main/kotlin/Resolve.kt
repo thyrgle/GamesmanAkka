@@ -5,6 +5,4 @@ package solve
  *
  * No logic in this class. Meant to be interpreted by onReceive.
  */
-class Resolve<Pos>(position: Pos) {
-    val position = position
-}
+data class Resolve<Pos>(val position: Pos, val state: State)
