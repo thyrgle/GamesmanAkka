@@ -68,7 +68,7 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
         fun lookup(position: Pos, parent: Pos) {
             //check if position is already waiting to be resolved, no need to distribute again
             if (unresolved.isUnresolved(position)) {
-                log.debug("Already being resolved")
+                log.debug(position.toString() + " is already being resolved")
                 unresolved.addParent(position, parent)
                 return
             }
@@ -76,7 +76,7 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
             //check if position is already solved
             val solved = solvedPositions.get(position)
             if (solved != null) {
-                log.debug("Already solved")
+                log.debug(position.toString() + " is already solved with value " + solved)
                 sendMessage(sender, Resolve(parent, solved))
                 return
             }
@@ -123,6 +123,7 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
             }
 
             if (i == 0) {
+                //this means there are no more children, so we have solved this position
                 val solvedState = unresolved.getState(position)
                 solvedPositions.put(position, solvedState)
 
@@ -152,14 +153,21 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
          * Handle the resolve message
          *
          * @param position to be resolved.
-         */ 
+         */
         fun resolve(position: Pos, state: State) {
             // TODO.
             if (unresolved.updateState(position, state)) {
+                //finished resolving all children that were sent out, continue distributing next ones
                 distribute(position)
             }
         }
 
+        /**
+         * Handles anything that needs to be done when sending a message out. Currently it increments counter
+         *
+         * @param targetActor to send message to
+         * @param msg being sent
+         */
         fun sendMessage(targetActor: ActorRef, msg: Any) {
 
             log.debug("Send " + msg.toString() + " to " + targetActor.toString())
