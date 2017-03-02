@@ -104,7 +104,7 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
             val currentIndex = unresolved.getCurrentIndex(position)
             val maxToSend = Config.MAX_DISTR_COUNT - counter
 
-            //TODO: optimize game API to use current index and # of children we're sending
+            //TODO: optimize game API so we don't have to generate all the children each time
             val moves = game.genMoves(position)
 
             var i = 0
