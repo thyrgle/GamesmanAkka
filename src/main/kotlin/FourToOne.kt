@@ -1,7 +1,7 @@
 package solve
 
 class FourToOne : Game<Int, Int> {
-    override val initialPos = 4
+    override val initialPos = 200
 
     override fun doMove(p: Int, m: Int): Int {
         return p - m
@@ -10,8 +10,9 @@ class FourToOne : Game<Int, Int> {
     
     override fun genMoves(p: Int): Array<Int> {
         when {
-            p == 1 -> return arrayOf(0)
-            else   -> return arrayOf(p - 1, p - 2)
+            p == 0 -> return arrayOf()
+            p == 1 -> return arrayOf(1)
+            else   -> return arrayOf(1, 2)
         }
     }
 
@@ -29,9 +30,6 @@ class FourToOne : Game<Int, Int> {
     }
 }
 
-object Main {
-    
-    fun main() {
-        Solver<Int, Int>(FourToOne()).run()
-    }
+fun main(args: Array<String>) {
+    Solver(FourToOne()).run()
 }

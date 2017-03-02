@@ -5,6 +5,5 @@ package solve
  *
  * No logic in this class. Lookup is meant to be interpreted by onReceive.
  */
-class Lookup<Pos>(position: Pos) {
-    val position = position
-}
+data class Lookup<Pos>(val position: Pos,
+                       val parent: Pos)
