@@ -47,17 +47,6 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
         master.tell(Lookup<Pos>(game.initialPos, game.initialPos), null)
     }
 
-
-    /**
-     * A class that contains information about an unresolved position.
-     */
-    inner class Unresolved<Pos> (pos: Pos) {
-        // TODO: Does it need to be mutable?
-        val childrenRemaining: MutableMap<Pos, Int> = mutableMapOf()
-        val status: Pair<Primitive, Int> = Pair(Primitive.LOSS, -1)
-        val parents: MutableList<Pos> = mutableListOf();
-    }
-
     /**
      * An actor responsible for maintaining and "solving" a subset of game states.
      */
@@ -99,6 +88,11 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
                 sendMessage(sender, Resolve(parent, State(primitive, 0)))
                 return
             }
+
+            unresolved.add(position, parent)
+
+            distribute(position)
+        }
 
         /**
          * Generate a positions children and distribute them to everyone.
@@ -160,7 +154,6 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
          * @param position to be resolved.
          */
         fun resolve(position: Pos, state: State) {
-            // TODO.
             if (unresolved.updateState(position, state)) {
                 //finished resolving all children that were sent out, continue distributing next ones
                 distribute(position)
