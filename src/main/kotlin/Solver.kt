@@ -5,9 +5,15 @@ import akka.actor.ActorRef
 import akka.actor.Props
 import akka.actor.UntypedActor
 
-import akka.event.Logging;
-import akka.event.LoggingAdapter;
+import akka.event.Logging
+import akka.event.LoggingAdapter
 import com.typesafe.config.ConfigFactory
+
+import org.ehcache.CacheManager
+import org.ehcache.Cache
+import org.ehcache.config.builders.CacheManagerBuilder
+import org.ehcache.config.builders.CacheConfigurationBuilder
+import org.ehcache.config.builders.ResourcePoolsBuilder
 
 /**
  * A group of "solvers" that solve games!
@@ -50,14 +56,16 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
     /**
      * An actor responsible for maintaining and "solving" a subset of game states.
      */
-    inner class SolverActor : UntypedActor() {
+    inner class SolverActor() : UntypedActor() {
 
         val log = Logging.getLogger(context.system(), this)
 
-        val solvedPositions: MutableMap<Pos, State> =  mutableMapOf()
         val unresolved: Unresolved<Pos> = Unresolved(log)
 
         var counter = 0
+
+        // var cm : CacheManager? = null
+        var solvedPositions : Cache<Any, State>? = null
 
         /**
          * Handle the lookup message
@@ -73,7 +81,7 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
             }
 
             //check if position is already solved
-            val solved = solvedPositions.get(position)
+            val solved = solvedPositions?.get(position)
             if (solved != null) {
                 log.debug(position.toString() + " is already solved with value " + solved)
                 sendMessage(sender, Resolve(parent, solved))
@@ -84,7 +92,7 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
             val primitive = game.primitive(position)
             if (!primitive.equals(Primitive.UNDECIDED)) {
                 log.debug(position.toString() + " is a primitive with value " + primitive)
-                solvedPositions.put(position, State(primitive, 0))
+                solvedPositions?.put(position, State(primitive, 0))
                 sendMessage(sender, Resolve(parent, State(primitive, 0)))
                 return
             }
@@ -124,9 +132,9 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
             if (i == 0) {
                 //this means there are no more children, so we have solved this position
                 val solvedState = unresolved.getState(position)
-                solvedPositions.put(position, solvedState)
+                solvedPositions?.put(position, solvedState)
 
-                log.info(position.toString() + " is a " + solvedPositions.get(position).toString())
+                log.info(position.toString() + " is a " + solvedPositions?.get(position).toString())
 
                 if (position!!.equals(game.initialPos)) {
                     log.debug("We're done")
@@ -171,6 +179,17 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
             log.debug("Send " + msg.toString() + " to " + targetActor.toString())
             targetActor.tell(msg, self)
             counter++
+        }
+
+        override fun preStart() {
+            val cm = CacheManagerBuilder.newCacheManagerBuilder() 
+                               .withCache("solved",
+                               CacheConfigurationBuilder
+                               .newCacheConfigurationBuilder(Any::class.java, 
+                                                             State::class.java,
+                                                             ResourcePoolsBuilder.heap(10)))
+                                                             .build()
+            solvedPositions = cm.getCache("solved", Any::class.java, State::class.java);
         }
 
         override fun onReceive(msg: Any?) {
