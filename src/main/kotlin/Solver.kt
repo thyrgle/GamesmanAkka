@@ -4,8 +4,8 @@ import akka.actor.ActorSystem
 import akka.actor.ActorRef
 import akka.actor.Props
 import akka.actor.UntypedActor
-
 import akka.event.Logging
+
 import org.ehcache.Cache
 import org.ehcache.config.builders.CacheConfigurationBuilder
 import org.ehcache.config.builders.CacheManagerBuilder
