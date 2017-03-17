@@ -9,9 +9,9 @@ class FourToOne : Game<Int, Int> {
     }
     
     override fun genMoves(p: Int): Array<Int> {
-        when {
-            p == 0 -> return arrayOf()
-            p == 1 -> return arrayOf(1)
+        when (p) {
+            0 -> return arrayOf()
+            1 -> return arrayOf(1)
             else   -> return arrayOf(1, 2)
         }
     }
