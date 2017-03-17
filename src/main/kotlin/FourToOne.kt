@@ -31,5 +31,5 @@ class FourToOne : Game<Int, Int> {
 }
 
 fun main(args: Array<String>) {
-    Solver(FourToOne()).run()
+    Solver(FourToOne(), Int::class.javaObjectType).run()
 }
