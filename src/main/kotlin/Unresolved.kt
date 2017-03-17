@@ -52,7 +52,7 @@ class Unresolved<Pos>(log: LoggingAdapter) {
      * @param parent to be added
      */
     fun addParent(position: Pos, parent: Pos) {
-        map[position]!!.parents!!.add(parent)
+        map[position]!!.parents.add(parent)
     }
 
     /**
@@ -123,24 +123,24 @@ class Unresolved<Pos>(log: LoggingAdapter) {
             val currentRemoteness = data!!.state.remoteness
 
             val newRemoteness =
-                    if(remoteness < currentRemoteness || !data!!.state.outcome.equals(Primitive.WIN))
+                    if(remoteness < currentRemoteness || !data.state.outcome.equals(Primitive.WIN))
                         //update remoteness if better found or first time we set this state to win
                         remoteness + 1
                     else
                         currentRemoteness
 
-            map[position] = data!!.copy(state = State(Primitive.WIN, newRemoteness))
+            map[position] = data.copy(state = State(Primitive.WIN, newRemoteness))
 
         } else if (outcome.equals(Primitive.WIN)) {
 
             if (data!!.state.outcome.equals(Primitive.LOSS) && remoteness + 1 > data!!.state.remoteness) {
                 //update remoteness if better found and this state is still a loss
-                map[position] = data!!.copy(state = State(Primitive.LOSS, remoteness + 1))
+                map[position] = data.copy(state = State(Primitive.LOSS, remoteness + 1))
             }
 
         } else if (outcome.equals(Primitive.TIE)) {
             if (!data!!.state.outcome.equals(Primitive.WIN)) {
-                val currentRemoteness = data!!.state.remoteness
+                val currentRemoteness = data.state.remoteness
 
                 val newRemoteness =
                         if (remoteness + 1 > currentRemoteness || data!!.state.outcome.equals(Primitive.LOSS))
