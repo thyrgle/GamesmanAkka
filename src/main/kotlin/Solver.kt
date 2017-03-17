@@ -1,13 +1,7 @@
 package solve
 
-import akka.actor.ActorSystem
-import akka.actor.ActorRef
-import akka.actor.Props
-import akka.actor.UntypedActor
-
+import akka.actor.*
 import akka.event.Logging;
-import akka.event.LoggingAdapter;
-import com.typesafe.config.ConfigFactory
 
 /**
  * A group of "solvers" that solve games!
@@ -26,7 +20,7 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
      * @return the actor associated with the particular hash.
      */
     fun actorForHash(hash: Int): ActorRef {
-        return actors.get(hash % Config.ACTOR_COUNT)
+        return actors.get(Math.abs(hash % Config.ACTOR_COUNT))
     }
     
     /**
@@ -83,7 +77,7 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
             //check if position is a primitive
             val primitive = game.primitive(position)
             if (!primitive.equals(Primitive.UNDECIDED)) {
-                log.debug(position.toString() + " is a primitive with value " + primitive)
+                log.info(position.toString() + " is a primitive with value " + primitive)
                 solvedPositions.put(position, State(primitive, 0))
                 sendMessage(sender, Resolve(parent, State(primitive, 0)))
                 return
@@ -101,7 +95,7 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
          */
         fun distribute(position: Pos) {
             val currentIndex = unresolved.getCurrentIndex(position)
-            val maxToSend = Config.MAX_DISTR_COUNT - counter
+            val maxToSend = if (counter >= Config.MAX_DISTR_COUNT) 1 else Config.MAX_DISTR_COUNT - counter
 
             //TODO: optimize game API so we don't have to generate all the children each time
             val moves = game.genMoves(position)
@@ -129,7 +123,12 @@ class Solver<Pos, Move> (game: Game<Pos, Move>) {
                 log.info(position.toString() + " is a " + solvedPositions.get(position).toString())
 
                 if (position!!.equals(game.initialPos)) {
-                    log.debug("We're done")
+                    println("We're done, result: " + solvedState)
+
+                    //TODO: replace with post-completion procedure
+                    for (actor in actors) {
+                        context.stop(actor)
+                    }
                     return
                 }
 
