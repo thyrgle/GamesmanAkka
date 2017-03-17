@@ -56,13 +56,9 @@ class Solver<Pos, Move> (game: Game<Pos, Move>, posClass: Class<Pos>) {
     inner class SolverActor : UntypedActor() {
 
         val log = Logging.getLogger(context.system(), this)
-
         val cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build()
-
         var solvedPositions: Cache<Pos, State>? = null
-
         val unresolved: Unresolved<Pos> = Unresolved(log)
-
         var counter = 0
 
         override fun preStart() {
@@ -87,7 +83,7 @@ class Solver<Pos, Move> (game: Game<Pos, Move>, posClass: Class<Pos>) {
 
             //check if position is already solved
             val solved = solvedPositions!!.get(position)
-            if (solved != null) {
+            solved?.let {
                 log.debug(position.toString() + " is already solved with value " + solved)
                 sendMessage(sender, Resolve(parent, solved))
                 return
@@ -114,7 +110,11 @@ class Solver<Pos, Move> (game: Game<Pos, Move>, posClass: Class<Pos>) {
          */
         fun distribute(position: Pos) {
             val currentIndex = unresolved.getCurrentIndex(position)
-            val maxToSend = if (counter >= Config.MAX_DISTR_COUNT) 1 else Config.MAX_DISTR_COUNT - counter
+            val maxToSend = if (counter >= Config.MAX_DISTR_COUNT) {
+                1
+            } else {
+                Config.MAX_DISTR_COUNT - counter
+            }
 
             //TODO: optimize game API so we don't have to generate all the children each time
             val moves = game.genMoves(position)
