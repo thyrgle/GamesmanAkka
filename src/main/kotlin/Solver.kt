@@ -1,7 +1,10 @@
 package solve
 
-import akka.actor.*
-import akka.event.Logging;
+import akka.actor.ActorSystem
+import akka.actor.ActorRef		
+import akka.actor.Props		
+import akka.actor.UntypedActor
+import akka.event.Logging
 
 /**
  * A group of "solvers" that solve games!
