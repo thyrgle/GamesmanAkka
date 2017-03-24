@@ -11,6 +11,7 @@ import org.ehcache.config.builders.CacheConfigurationBuilder
 import org.ehcache.config.builders.CacheManagerBuilder
 import org.ehcache.config.builders.ResourcePoolsBuilder
 
+import kotlin.system.exitProcess
 /**
  * A group of "solvers" that solve games!
  *
@@ -148,6 +149,7 @@ class Solver<Pos, Move> (game: Game<Pos, Move>, posClass: Class<Pos>) {
                     for (actor in actors) {
                         context.stop(actor)
                     }
+                    exitProcess(0)
                     return
                 }
 
